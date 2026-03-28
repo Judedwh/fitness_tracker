@@ -46,11 +46,11 @@ def initialise_db() -> None:
             seconds      REAL,
             notes        TEXT,
             rpe          REAL,
-            -- Epley 1RM estimate: weight * (1 + reps/30)
+            -- Brzycki 1RM estimate: weight * (36 / (37-reps))
             one_rm_kg    REAL GENERATED ALWAYS AS (
                 CASE
                     WHEN reps > 0 AND weight_kg > 0
-                    THEN ROUND(weight_kg * (1.0 + reps / 30.0), 1)
+                    THEN ROUND(weight_kg * (36.0 / (37.0 - reps), 1)
                     ELSE NULL
                 END
             ) STORED
