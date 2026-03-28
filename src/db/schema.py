@@ -50,7 +50,7 @@ def initialise_db() -> None:
             one_rm_kg    REAL GENERATED ALWAYS AS (
                 CASE
                     WHEN reps > 0 AND weight_kg > 0
-                    THEN ROUND(weight_kg * (36.0 / (37.0 - reps), 1)
+                    THEN ROUND(weight_kg * (36.0 / (37.0 - reps)), 1)
                     ELSE NULL
                 END
             ) STORED
