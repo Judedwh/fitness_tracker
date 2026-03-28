@@ -277,18 +277,26 @@ elif page == "📈 Lift Progress":
 
     # Summary metrics for this exercise
     best_1rm = ex_df["one_rm_kg"].max()
-    best_weight = ex_df["weight_kg"].max()
+    best_weight = ex_df[ex_df["reps"] >= 1]["weight_kg"].max()
     total_sessions_ex = ex_df["date"].nunique()
     total_sets_ex = len(ex_df)
+    latest_1rm = (
+        ex_df[ex_df["one_rm_kg"].notna()]
+        .sort_values("date")
+        .groupby("date", as_index=False)["one_rm_kg"]
+        .max()
+        .iloc[-1]["one_rm_kg"]
+    )
 
-    c1, c2, c3, c4 = st.columns(4)
+    c1, c2, c3, c4, c5 = st.columns(5)
     c1.markdown(metric_card("Best Est. 1RM", f"{best_1rm:.1f} kg"), unsafe_allow_html=True)
-    c2.markdown(metric_card("Best Weight", f"{best_weight:.1f} kg"), unsafe_allow_html=True)
-    c3.markdown(metric_card("Sessions", str(total_sessions_ex)), unsafe_allow_html=True)
-    c4.markdown(metric_card("Total Sets", str(total_sets_ex)), unsafe_allow_html=True)
+    c2.markdown(metric_card("Current Est. 1RM", f"{latest_1rm:.1f} kg"), unsafe_allow_html=True)
+    c3.markdown(metric_card("Best Weight", f"{best_weight:.1f} kg"), unsafe_allow_html=True)
+    c4.markdown(metric_card("Sessions", str(total_sessions_ex)), unsafe_allow_html=True)
+    c5.markdown(metric_card("Total Sets", str(total_sets_ex)), unsafe_allow_html=True)
 
     st.markdown("### Estimated 1RM over time")
-    st.caption("Best set per session · Epley formula: weight × (1 + reps/30)")
+    st.caption("Best set per session · Brzycki formula: weight x (36 / (37-reps)")
 
     best_per_session = best_set_per_session(ex_df)
 
